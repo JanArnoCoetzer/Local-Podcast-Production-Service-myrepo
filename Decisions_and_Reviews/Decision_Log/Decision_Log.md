@@ -126,6 +126,28 @@ Identifiers such as FR, BR, UC, D and RD refer to the Scenario 29 CA1 dossier an
 - **Evidence:** Reconciliation record L6 · Section A CRC and GRASP (#28, #32) · implementation catalogue (#9)
 
 ---
+## DEC-10: Controller pattern for CA2 design
+
+- **Date:** _27/11/26_
+- **Context:** Each section designed its own controller. UC11 reads data from all sections. UC11 had no controller (#43).
+- **Decision:** One use-case controller for each section: ProposalController (A), ContributorConsentController (B), RecordingDraftController (C) and ReviewPublicationController (D). Also, one ProductionOverviewController for UC11. This controller only reads data.
+- **Reasoning:** Each controller keeps high cohesion. The design does not use one facade controller. UC11 only reads data. Thus, its controller is small. It asks the domain objects for their data.
+- **Rejected alternatives:** A facade controller (approximately 24 operations, a God controller). UC11 in a controller that exists. No controller for UC11.
+- **Consequences:** All controllers get the current date from one shared Clock interface and use repositories to find and save objects. Section C uses the name RecordingDraftController (agreed by Jack). The DCD (#44) shows five controllers and the shared Clock. Each member updates their own section file.
+- **Evidence:** `Object_Oriented_Design/GRASP/controller-pattern-decision.md` · #43 (agreed by Rani, Jack and Tsubasa; confirmed by Rani)
+---
+
+## DEC-11: One consent covers all drafts and channels until Q3 is answered
+
+- **Date:** _27/11/26_
+- **Context:** Q3 (when new consent is needed for reuse, a large edit or a new channel) is not answered. BR5 blocks a draft with outstanding consent, but the blocked rule needs to know which consent counts (#29).
+- **Decision:** One Consent record for a Contribution satisfies BR5 for all drafts and all channels of the episode. Recorded as assumption A15 in the analysis baseline.
+- **Reasoning:** The design can go ahead without an answer to Q3. It adds no new rule or attribute, and it is easy to change.
+- **Rejected alternatives:** A new consent for each draft or each channel. Rejected because the scenario gives no rule for this, so it would invent policy.
+- **Consequences:** `Episode.hasOutstandingConsent()` and `Contribution` check for one consent only. If Q3 gives renewal conditions, add consent attributes or a renewal rule and scenarios GS26 to GS29.
+- **Evidence:** `Individual_Contributions/Section_B_Contributors_Arno/CA2_Section_B.md` · baseline A15 · #29
+
+---
 
 ## Template for new entries
 
